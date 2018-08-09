@@ -1,0 +1,49 @@
+.toastMessage{
+    display: none;
+    position: fixed;
+    width: 250px;
+    height: 55px;
+    border-radius: 10px;
+    background-color: rgba(3, 194, 45, 0.69);
+    /*float: left;*/
+    z-index: 100;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50% -50%);
+}
+.message{
+    font-size: 2rem;
+    font-weight: bold;
+    color: rgb(255, 255, 255);
+    position: relative;
+    text-align: center;
+    top: 50%;
+    transform: translateY(-50%);
+    text-shadow: 1px 1px 1px black;
+
+}
+.pagination{
+    margin-bottom: 0px;
+    margin-top: 5px;
+}
+.add{
+    width: 40%;
+}
+.cancel{
+    float: right;
+    width: 40%;
+    background-color: rgba(189, 19, 0, 0.35);
+}
+.server {
+    margin-top: 10px;
+    width: 100%;
+}
+.inputError{
+    background-color: rgba(255, 0, 16, 0.28);
+}
+.invalidInput{
+    color: red;
+    text-align: center;
+    visibility: hidden;
+}
