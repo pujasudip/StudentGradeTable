@@ -167,13 +167,13 @@ function deleteStudent(){
 }
 
 function getDataFromServer(){
-    var API_KEY = {'api_key': 'odvQ9PAoKc'};
+    var API_KEY = {'api_key': 'practice001'};
     var lfzAPICall = {
         data: API_KEY,
         dataType: 'json',
-        url: "http://s-apis.learningfuze.com/sgt/get/",
+        url: "dataEndpoint.php",
         // url: "http://s-apis.learningfuze.com/sgt/adfasdfdsaf",
-        method: 'POST',
+        method: 'GET',
         success: studentInfoFromServerSuccess,
         error: failedToRetrieve,
     }
@@ -184,6 +184,7 @@ function getDataFromServer(){
 function studentInfoFromServerSuccess(studentInfo){
     student_arrayFromServer = studentInfo.data;
     console.log('successfully retrieved');
+    console.log('test:', student_arrayFromServer);
     for(var serverStIndex = 0; serverStIndex < student_arrayFromServer.length; serverStIndex++){
         renderStudentOnDom(student_arrayFromServer[serverStIndex]);
     }
@@ -196,15 +197,17 @@ function failedToRetrieve(){
 }
 
 function pushDataToServer(studentInfo){
+    debugger;
     var lfzAPICall = {
         data: {
+            action: 'enter',
             api_key: 'odvQ9PAoKc',
             name: studentInfo.name,
             grade: studentInfo.grade,
             course: studentInfo.course
         },
         dataType: 'json',
-        url: "http://s-apis.learningfuze.com/sgt/create",
+        url: "dataEndpoint.php",
         // url: "http://s-apis.learningfuze.com/sgt/adfasdfdsaf",
         method: 'POST',
         success: function(response){
@@ -243,15 +246,17 @@ function failedToPush(){
 function deleteDataFromServer(idOfStudent){
     console.log('student length: ', student_arrayFromServer.length);
     console.log('id to be deleted: ', idOfStudent);
+    let data = {
+        api_key: 'odvQ9PAoKc',
+        student_id: idOfStudent
+    };
     var lfzAPICall = {
-        data: {
-            api_key: 'odvQ9PAoKc',
-            student_id: idOfStudent
-        },
+        data: data,
         dataType: 'json',
-        url: "http://s-apis.learningfuze.com/sgt/delete",
+        // url: "http://s-apis.learningfuze.com/sgt/delete",
         // url: "http://s-apis.learningfuze.com/sgt/adfasdfdsaf",
-        method: 'POST',
+        url: "dataEndpoint.php?id=" + data['student_id'],
+        method: 'DELETE',
         success: deleteFromServerSuccess,
         error: failedDeletionProcess,
     }
@@ -308,6 +313,7 @@ function editInfoOnServer(individualStudent, id){
     console.log(id);
     var lfzAPICall = {
         data: {
+            action: 'update',
             api_key: 'odvQ9PAoKc',
             student_id: id,
             name: individualStudent.name,
@@ -315,8 +321,9 @@ function editInfoOnServer(individualStudent, id){
             course: individualStudent.course
         },
         dataType: 'json',
-        url: "http://s-apis.learningfuze.com/sgt/edit",
+        // url: "http://s-apis.learningfuze.com/sgt/edit",
         // url: "http://s-apis.learningfuze.com/sgt/adfasdfdsaf",
+        url: 'dataEndpoint.php',
         method: 'POST',
         success: editOnServerSuccess(),
         error: function(){
