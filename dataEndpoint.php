@@ -3,7 +3,7 @@
 require_once('endpointCredential.php');
 
 if($_SERVER['REQUEST_METHOD'] === 'GET'){
-    $query = "SELECT * FROM `students`";
+    $query = "SELECT * FROM `gradetable`";
 
     $result = mysqli_query($conn, $query);
 
@@ -31,7 +31,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] === 'enter'){
     $course = $_POST['course'];
     $grade = $_POST['grade'];
 
-    $query = "INSERT INTO `students`(`name`, `course`, `grade`) VALUES('$name', '$course', $grade)";
+    $query = "INSERT INTO `gradetable`(`name`, `course`, `grade`) VALUES('$name', '$course', $grade)";
 
     $result = mysqli_query($conn, $query);
 
@@ -47,15 +47,14 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] === 'enter'){
 
     $json_output = json_encode($output);
 
-//    print_r($rowAffected);
-    print_r($_POST);
+    print($json_output);
 }
 
 if($_SERVER['REQUEST_METHOD'] === 'DELETE'){
     $queryString = $_SERVER["QUERY_STRING"];
     $id = preg_replace('/\D/', '', $queryString);
 
-    $query = "DELETE FROM `students` WHERE id=$id";
+    $query = "DELETE FROM `gradetable` WHERE id=$id";
 
     $result = mysqli_query($conn, $query);
 
@@ -70,6 +69,8 @@ if($_SERVER['REQUEST_METHOD'] === 'DELETE'){
     }
 
     $json_output = json_encode($output);
+
+    print($json_output);
 }
 
 if($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] === 'update'){
@@ -78,7 +79,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] === 'update'){
     $course = $_POST['course'];
     $grade = $_POST['grade'];
 
-    $query = "UPDATE `students` SET `name`='$name', `course`='$course', `grade`='$grade' WHERE `id`=$id";
+    $query = "UPDATE `gradetable` SET `name`='$name', `course`='$course', `grade`='$grade' WHERE `id`=$id";
 
     $result = mysqli_query($conn, $query);
 

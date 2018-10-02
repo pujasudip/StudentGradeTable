@@ -47,3 +47,6 @@
     text-align: center;
     visibility: hidden;
 }
+.nameError, .courseError, .gradeError{
+    color: red;
+}

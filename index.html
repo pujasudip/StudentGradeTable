@@ -58,22 +58,25 @@
             <span class="input-group-addon">
                 <span class="glyphicon glyphicon-user"></span>
             </span>
-            <input type="text" class="form-control" name="studentName" id="studentName" placeholder="Student Name">
+            <input type="text" class="form-control studentInfoAdd" name="studentName" id="studentName" placeholder="Student Name">
         </div>
+        <p class="nameError"></p>
         <div class="input-group form-group">
             <span class="input-group-addon">
                 <span class="glyphicon glyphicon-list-alt"></span>
             </span>
-            <input type="text" class="form-control" name="course" id="course"
+            <input type="text" class="form-control studentInfoAdd" name="course" id="course"
                    placeholder="Student Course">
         </div>
+        <p class="courseError"></p>
         <div class="input-group form-group">
             <span class="input-group-addon">
                 <span class="glyphicon glyphicon-education"></span>
             </span>
-            <input type="text" class="form-control" name="studentGrade" id="studentGrade"
+            <input type="text" class="form-control studentInfoAdd" name="studentGrade" id="studentGrade"
                    placeholder="Student Grade">
         </div>
+        <p class="gradeError"></p>
         <button type="button" class="btn btn-success add" onclick="handleAddClicked()" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Adding">Add</button>
         <button type="button" class="btn btn-default cancel" onclick="handleCancelClick()" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Cancelling">Cancel</button>
         <button type="button" class="btn btn-warning server" id="serverData" onclick="getDataFromServer()" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Retrieving Data">Retrieve Student Information</button>
@@ -164,6 +167,26 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" id="save" data-dismiss="modal">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--delete confirmation modal-->
+    <div class="modal fade" id="deleteConfirm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger" id="exampleModalLongTitle">Delete Confirm?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <span class="glyphicon glyphicon-trash alert-danger"></span>&nbsp;<span id="nameConfirm"></span> will be deleted.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" id="confirmDelete">Delete</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
         </div>
