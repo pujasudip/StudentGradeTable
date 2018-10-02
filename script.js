@@ -193,9 +193,9 @@ function renderStudentOnDom(studentIndividual){
     var tableBody = $('tbody');
     var tableRow = $('<tr>');
     tableBody.append(tableRow);
-    tableRow.append(`<td contenteditable> ${studentIndividual.name}</td>`);
-    tableRow.append(`<td contenteditable> ${studentIndividual.course}</td>`);
-    tableRow.append(`<td contenteditable> ${studentIndividual.grade}</td>`);
+    tableRow.append(`<td> ${studentIndividual.name}</td>`);
+    tableRow.append(`<td> ${studentIndividual.course}</td>`);
+    tableRow.append(`<td> ${studentIndividual.grade}</td>`);
     tableRow.append(`<td class="text-center"><button id="delete" class="btn btn-danger studentDelete opBtn"><span class="visible-lg visible-md visible-sm">Delete</span><i class="fa fa-trash-o visible-xs"></i></button>
                          <button id="edit" class="btn btn-warning opBtn" data-toggle="modal" data-target="#editEntry"><span class="visible-lg visible-md visible-sm">Edit</span><i class="fa fa-edit visible-xs"></i></button></td>`);
 }
@@ -424,9 +424,9 @@ function editInfoOnServer(individualStudent, id){
         success: function(){
             student_arrayFromServer[editEntryIndex] = individualStudent;
             var rowHTML = $('<tr>');
-            rowHTML.append(`<td contenteditable> ${individualStudent.name}</td>`);
-            rowHTML.append(`<td contenteditable> ${individualStudent.course}</td>`);
-            rowHTML.append(`<td contenteditable> ${individualStudent.grade}</td>`);
+            rowHTML.append(`<td> ${individualStudent.name}</td>`);
+            rowHTML.append(`<td> ${individualStudent.course}</td>`);
+            rowHTML.append(`<td> ${individualStudent.grade}</td>`);
             rowHTML.append(`<td class="text-center"><button id="delete" class="btn btn-danger studentDelete opBtn"><span class="visible-lg visible-md visible-sm">Delete</span><i class="fa fa-trash-o visible-xs"></i></button>
                          <button id="edit" class="btn btn-warning opBtn" data-toggle="modal" data-target="#editEntry"><span class="visible-lg visible-md visible-sm">Edit</span><i class="fa fa-edit visible-xs"></i></button></td>`);
             $('tbody > tr').eq(editEntryIndex).replaceWith(rowHTML);
