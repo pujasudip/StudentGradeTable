@@ -87,7 +87,7 @@ function confirmDeleteModal(){
     $('#deleteConfirm').modal('show');
     $('#confirmDelete').click(function(){
         var index = row.parent().parent().index();
-        // deleteStudent(index);
+        deleteStudent(index);
     });
 }
 /***************************************************************************************************
