@@ -6,29 +6,14 @@
  * Listen for the document to load and initialize the application
  */
 $(document).ready(initializeApp);
-
-/**
- * Define all global variables here.  
- */
-/***********************
- * student_array - global array to hold student objects
- * @type {Array}
- * example of student_array after input: 
- * student_array = [
- *  { name: 'Jake', course: 'Math', grade: 85 },
- *  { name: 'Jill', course: 'Comp Sci', grade: 85 }
- * ];
- */
-
 var student_arrayFromServer = [];
 var stagedToBeDeletedIndex = '';
 var editEntryIndex = '';
-var my_array = [];
+var local_student_array = [];
 var currentPage = 1;
-if(localStorage.localArray.length === 0){
-    localStorage.setItem('localArray', JSON.stringify(my_array));
+if(typeof localStorage.local_student_array !== "undefined"){
+    localStorage.setItem('localArray', JSON.stringify(local_student_array));
 }
-
 
 /***************************************************************************************************
 * initializeApp 
@@ -46,6 +31,31 @@ function initializeApp() {
             $this.button('reset');
         }, 1000);
     });
+
+    $('.studentInfoAdd').on('input', handleStudentAddForm);
+}
+
+function handleStudentAddForm(){
+    var inputType = $(this).attr('name');
+
+    if(inputType === 'studentName'){
+        if($(this).val().length > 1){
+            $('.nameError').text('');
+            $('#studentName').removeClass('inputError');
+        }
+    }
+    if(inputType === 'course'){
+        if($(this).val().length > 1){
+            $('.courseError').text('');
+            $('#course').removeClass('inputError');
+        }
+    }
+    if(inputType === 'studentGrade'){
+        if(!isNaN($(this).val())){
+            $('.gradeError').text('');
+            $('#studentGrade').removeClass('inputError');
+        }
+    }
 }
 
 /***************************************************************************************************
@@ -55,7 +65,7 @@ function initializeApp() {
 *
 */
 function addClickHandlersToElements(){
-    $('tbody').on('click', '#delete', deleteStudent);
+    $('tbody').on('click', '#delete', confirmDeleteModal);
     $('tbody').on('click', '#edit', entryToBeEdited);
     $('#save').click(editStudentInfo);
 }
@@ -68,6 +78,17 @@ function addClickHandlersToElements(){
  */
 function handleAddClicked(){
     addStudent();
+}
+
+function confirmDeleteModal(){
+    var row = $(this);
+    var firstTd = row.parent().parent().find('td')[0];
+    $('#nameConfirm').text($(firstTd).text());
+    $('#deleteConfirm').modal('show');
+    $('#confirmDelete').click(function(){
+        var index = row.parent().parent().index();
+        // deleteStudent(index);
+    });
 }
 /***************************************************************************************************
  * handleCancelClicked - Event Handler when user clicks the cancel button, should clear out student form
@@ -88,19 +109,47 @@ function addStudent(){
     var studentName = $("input[name='studentName']");
     var course = $("#course");
     var studentGrade = $("input[name='studentGrade']");
+    var validData = true;
+
+    if(studentName.val().length < 2) {
+        validData = false;
+        $('.nameError').text('Name should be at least two character.');
+        $('#studentName').addClass('inputError');
+    }
+    if(course.val().length < 2){
+        validData = false;
+        $('.courseError').text('Course should be at least two character.');
+        $('#course').addClass('inputError');
+    }
+    if(studentGrade.val() === ''){
+        validData = false;
+        $('.gradeError').text('Invalid grade');
+        $('#studentGrade').addClass('inputError');
+    } else if(studentGrade.val() > 100 || studentGrade.val() < 0){
+        validData = false;
+        $('.gradeError').text('Grade out of range');
+        $('#studentGrade').addClass('inputError');
+    } else if(isNaN(studentGrade.val())){
+        validData = false;
+        $('.gradeError').text('Grade should be a number');
+        $('#studentGrade').addClass('inputError');
+    }
+
     var studentInfo = {
         id: '',
         name: studentName.val(),
         course: course.val(),
         grade: parseInt(studentGrade.val())
     };
-    pushDataToServer(studentInfo);
-    clearAddStudentFormInputs();
-    updateStudentList(studentInfo);
-    $('*').click(function(){
-        $('input').removeClass('inputError');
-        $('.invalidInput').css('visibility', 'hidden');
-    })
+    if(validData){
+        pushDataToServer(studentInfo);
+        clearAddStudentFormInputs();
+        updateStudentList(studentInfo);
+        $('*').click(function(){
+            $('input').removeClass('inputError');
+            $('.invalidInput').css('visibility', 'hidden');
+        })
+    }
 }
 /***************************************************************************************************
  * clearAddStudentForm - clears out the form values based on inputIds variable
@@ -159,9 +208,7 @@ function renderGradeAverage(average){
     $('.avgGrade').text(average);
 }
 
-function deleteStudent(){
-    var studentIndex = $(this).parent().parent().index();
-    stagedToBeDeletedIndex = studentIndex;
+function deleteStudent(studentIndex){
     var studentID = student_arrayFromServer[studentIndex].id;
     deleteDataFromServer(studentID);
 }
@@ -197,7 +244,6 @@ function failedToRetrieve(){
 }
 
 function pushDataToServer(studentInfo){
-    debugger;
     var lfzAPICall = {
         data: {
             action: 'enter',
