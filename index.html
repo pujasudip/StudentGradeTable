@@ -152,21 +152,24 @@
                     <form>
                         <div class="form-group">
                             <label for="nameEdit" class="col-form-label">Name</label>
-                            <input type="text" class="form-control" id="nameEdit">
+                            <input type="text" class="form-control editStudentInfo" id="nameEdit" name="studentName">
                         </div>
+                        <p class="nameEditError"></p>
                         <div class="form-group">
                             <label for="courseEdit" class="col-form-label">Course</label>
-                            <input type="text" class="form-control" id="courseEdit">
+                            <input type="text" class="form-control editStudentInfo" id="courseEdit" name="course">
                         </div>
+                        <p class="courseEditError"></p>
                         <div class="form-group">
                             <label for="gradeEdit" class="col-form-label">Grade</label>
-                            <input type="text" class="form-control" id="gradeEdit">
+                            <input type="text" class="form-control editStudentInfo" id="gradeEdit" name="studentGrade">
                         </div>
+                        <p class="gradeEditError"></p>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="save" data-dismiss="modal">Save Changes</button>
+                    <button type="button" class="btn btn-primary" id="save">Save Changes</button>
                 </div>
             </div>
         </div>

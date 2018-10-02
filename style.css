@@ -50,3 +50,6 @@
 .nameError, .courseError, .gradeError{
     color: red;
 }
+.nameEditError, .courseEditError, .gradeEditError{
+    color: red;
+}

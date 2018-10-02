@@ -94,6 +94,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] === 'update'){
     }
 
     $json_output = json_encode($output);
+    print($json_output);
 }
 
 ?>

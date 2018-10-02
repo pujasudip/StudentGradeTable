@@ -33,6 +33,7 @@ function initializeApp() {
     });
 
     $('.studentInfoAdd').on('input', handleStudentAddForm);
+    $('.editStudentInfo').on('input', handleStudentEditForm);
 }
 
 function handleStudentAddForm(){
@@ -54,6 +55,29 @@ function handleStudentAddForm(){
         if(!isNaN($(this).val())){
             $('.gradeError').text('');
             $('#studentGrade').removeClass('inputError');
+        }
+    }
+}
+
+function handleStudentEditForm(){
+    var inputType = $(this).attr('name');
+
+    if(inputType === 'studentName'){
+        if($(this).val().length > 1){
+            $('.nameEditError').text('');
+            $('#nameEdit').removeClass('inputError');
+        }
+    }
+    if(inputType === 'course'){
+        if($(this).val().length > 1){
+            $('.courseEditError').text('');
+            $('#courseEdit').removeClass('inputError');
+        }
+    }
+    if(inputType === 'studentGrade'){
+        if(!isNaN($(this).val())){
+            $('.gradeEditError').text('');
+            $('#gradeEdit').removeClass('inputError');
         }
     }
 }
@@ -236,7 +260,7 @@ function studentInfoFromServerSuccess(studentInfo){
         renderStudentOnDom(student_arrayFromServer[serverStIndex]);
     }
     renderGradeAverage(calculateGradeAverage());
-    deleteButtonModify();
+    // deleteButtonModify();
 }
 
 function failedToRetrieve(){
@@ -265,7 +289,7 @@ function pushDataToServer(studentInfo){
                 my_array = JSON.parse(localStorage.getItem('localArray'));
                 my_array.push(studentInfo);
                 localStorage.setItem('localArray', JSON.stringify(my_array));
-                deleteButtonModify();
+                // deleteButtonModify();
                 renderGradeAverage(calculateGradeAverage());
             } else {
                 $('#studentName').addClass('inputError');
@@ -341,6 +365,31 @@ function editStudentInfo(){
     var nameEdit = $('#nameEdit').val();
     var courseEdit = $('#courseEdit').val();
     var gradeEdit = $('#gradeEdit').val();
+    var validData = true;
+
+    if(nameEdit.length < 2) {
+        validData = false;
+        $('.nameEditError').text('Name should be at least two character.');
+        $('#nameEdit').addClass('inputError');
+    }
+    if(courseEdit.length < 2){
+        validData = false;
+        $('.courseEditError').text('Course should be at least two character.');
+        $('#courseEdit').addClass('inputError');
+    }
+    if(gradeEdit === ''){
+        validData = false;
+        $('.gradeEditError').text('Invalid grade');
+        $('#gradeEdit').addClass('inputError');
+    } else if(gradeEdit > 100 || gradeEdit < 0){
+        validData = false;
+        $('.gradeEditError').text('Grade out of range');
+        $('#gradeEdit').addClass('inputError');
+    } else if(isNaN(gradeEdit)){
+        validData = false;
+        $('.gradeEditError').text('Grade should be a number');
+        $('#gradeEdit').addClass('inputError');
+    }
 
     var editedStudent = {
         name: nameEdit,
@@ -348,9 +397,11 @@ function editStudentInfo(){
         grade: gradeEdit
     }
 
-    var editedStudentId = student_arrayFromServer[editEntryIndex].id;
-    editInfoOnServer(editedStudent, editedStudentId)
-
+    if(validData){
+        $('#editEntry').modal('hide');
+        var editedStudentId = student_arrayFromServer[editEntryIndex].id;
+        editInfoOnServer(editedStudent, editedStudentId);
+    }
 }
 
 // entry point is not available in the server
@@ -371,8 +422,7 @@ function editInfoOnServer(individualStudent, id){
         // url: "http://s-apis.learningfuze.com/sgt/adfasdfdsaf",
         url: 'dataEndpoint.php',
         method: 'POST',
-        success: editOnServerSuccess(),
-        error: function(){
+        success: function(){
             student_arrayFromServer[editEntryIndex] = individualStudent;
             var rowHTML = $('<tr>');
             rowHTML.append(`<td contenteditable> ${individualStudent.name}</td>`);
@@ -382,38 +432,37 @@ function editInfoOnServer(individualStudent, id){
             rowHTML.append(`<td><button id="edit" class="btn btn-warning" data-toggle="modal" data-target="#editEntry">Edit</button></td>`);
             $('tbody > tr').eq(editEntryIndex).replaceWith(rowHTML);
         },
-    }
+        error: function(){
+            console.log('Error');
+        },
+    };
 
     $.ajax(lfzAPICall);
 }
-
-function editOnServerSuccess(){
-    console.log('edit successful');
-}
-
-function deleteButtonModify(){
-    var filterStudentMy = JSON.parse(localStorage.getItem('localArray'));
-    var localKeys = [];
-    var serverKeys = [];
-
-    if(filterStudentMy.length !== 0){
-        for(var localIndex = 0; localIndex < filterStudentMy.length; localIndex++){
-            var keyL = filterStudentMy[localIndex].id;
-            localKeys.push(keyL);
-        }
-    }
-
-    for(var serverIndex = 0; serverIndex < student_arrayFromServer.length; serverIndex++){
-        var keyS = student_arrayFromServer[serverIndex].id;
-        serverKeys.push(keyS);
-    }
-
-    var allTableRows = $('tbody > tr');
-
-    for(var rowIndex = 0; rowIndex < allTableRows.length; rowIndex++) {
-        var id = student_arrayFromServer[rowIndex].id;
-        if (localKeys.includes(id)) {
-            allTableRows.eq(rowIndex).css('background-color', 'green');
-        }
-    }
-}
+//
+// function deleteButtonModify(){
+//     var filterStudentMy = JSON.parse(localStorage.getItem('localArray'));
+//     var localKeys = [];
+//     var serverKeys = [];
+//
+//     if(filterStudentMy.length !== 0){
+//         for(var localIndex = 0; localIndex < filterStudentMy.length; localIndex++){
+//             var keyL = filterStudentMy[localIndex].id;
+//             localKeys.push(keyL);
+//         }
+//     }
+//
+//     for(var serverIndex = 0; serverIndex < student_arrayFromServer.length; serverIndex++){
+//         var keyS = student_arrayFromServer[serverIndex].id;
+//         serverKeys.push(keyS);
+//     }
+//
+//     var allTableRows = $('tbody > tr');
+//
+//     for(var rowIndex = 0; rowIndex < allTableRows.length; rowIndex++) {
+//         var id = student_arrayFromServer[rowIndex].id;
+//         if (localKeys.includes(id)) {
+//             allTableRows.eq(rowIndex).css('background-color', 'green');
+//         }
+//     }
+// }
