@@ -24,13 +24,6 @@ if(typeof localStorage.local_student_array !== "undefined"){
 function initializeApp() {
     addClickHandlersToElements();
     getDataFromServer();
-    $('.btn').on('click', function () {
-        var $this = $(this);
-        $this.button('loading');
-        setTimeout(function () {
-            $this.button('reset');
-        }, 1000);
-    });
 
     $('.studentInfoAdd').on('input', handleStudentAddForm);
     $('.editStudentInfo').on('input', handleStudentEditForm);
@@ -110,7 +103,9 @@ function confirmDeleteModal(){
     $('#nameConfirm').text($(firstTd).text());
     $('#deleteConfirm').modal('show');
     $('#confirmDelete').click(function(){
+        debugger;
         var index = row.parent().parent().index();
+        stagedToBeDeletedIndex = index;
         deleteStudent(index);
     });
 }
@@ -182,6 +177,12 @@ function clearAddStudentFormInputs(){
     $("input[name='studentName']").val('');
     $("#course").val('');
     $("input[name='studentGrade']").val('');
+    $('.nameError').text('');
+    $('.courseError').text('');
+    $('.gradeError').text('');
+    $('#studentName').removeClass('inputError');
+    $('#course').removeClass('inputError');
+    $('#studentGrade').removeClass('inputError');
 }
 /***************************************************************************************************
  * renderStudentOnDom - take in a student object, create html elements from the values and then append the elements
@@ -195,8 +196,8 @@ function renderStudentOnDom(studentIndividual){
     tableRow.append(`<td contenteditable> ${studentIndividual.name}</td>`);
     tableRow.append(`<td contenteditable> ${studentIndividual.course}</td>`);
     tableRow.append(`<td contenteditable> ${studentIndividual.grade}</td>`);
-    tableRow.append(`<td><button id="delete" class="btn btn-danger studentDelete">Delete</button></td>`)
-    tableRow.append(`<td><button id="edit" class="btn btn-warning" data-toggle="modal" data-target="#editEntry">Edit</button></td>`);
+    tableRow.append(`<td class="text-center"><button id="delete" class="btn btn-danger studentDelete opBtn"><span class="visible-lg visible-md visible-sm">Delete</span><i class="fa fa-trash-o visible-xs"></i></button>
+                         <button id="edit" class="btn btn-warning opBtn" data-toggle="modal" data-target="#editEntry"><span class="visible-lg visible-md visible-sm">Edit</span><i class="fa fa-edit visible-xs"></i></button></td>`);
 }
 
 /***************************************************************************************************
@@ -218,7 +219,7 @@ function updateStudentList(singleStudent){
 function calculateGradeAverage(){
     var sum = 0;
     for(var studentIndex = 0; studentIndex < student_arrayFromServer.length; studentIndex++){
-        sum += student_arrayFromServer[studentIndex].grade;
+        sum += parseInt(student_arrayFromServer[studentIndex].grade);
     }
     var average = (sum/student_arrayFromServer.length).toFixed(2);
     return average;
@@ -254,8 +255,6 @@ function getDataFromServer(){
 
 function studentInfoFromServerSuccess(studentInfo){
     student_arrayFromServer = studentInfo.data;
-    console.log('successfully retrieved');
-    console.log('test:', student_arrayFromServer);
     for(var serverStIndex = 0; serverStIndex < student_arrayFromServer.length; serverStIndex++){
         renderStudentOnDom(student_arrayFromServer[serverStIndex]);
     }
@@ -364,17 +363,17 @@ function entryToBeEdited(){
 function editStudentInfo(){
     var nameEdit = $('#nameEdit').val();
     var courseEdit = $('#courseEdit').val();
-    var gradeEdit = $('#gradeEdit').val();
+    var gradeEdit = parseInt($('#gradeEdit').val());
     var validData = true;
 
     if(nameEdit.length < 2) {
         validData = false;
-        $('.nameEditError').text('Name should be at least two character.');
+        $('.nameEditError').text('Name should be at least two characters.');
         $('#nameEdit').addClass('inputError');
     }
     if(courseEdit.length < 2){
         validData = false;
-        $('.courseEditError').text('Course should be at least two character.');
+        $('.courseEditError').text('Course should be at least two characters.');
         $('#courseEdit').addClass('inputError');
     }
     if(gradeEdit === ''){
@@ -428,8 +427,8 @@ function editInfoOnServer(individualStudent, id){
             rowHTML.append(`<td contenteditable> ${individualStudent.name}</td>`);
             rowHTML.append(`<td contenteditable> ${individualStudent.course}</td>`);
             rowHTML.append(`<td contenteditable> ${individualStudent.grade}</td>`);
-            rowHTML.append(`<td><button id="delete" class="btn btn-danger studentDelete">Delete</button></td>`)
-            rowHTML.append(`<td><button id="edit" class="btn btn-warning" data-toggle="modal" data-target="#editEntry">Edit</button></td>`);
+            rowHTML.append(`<td class="text-center"><button id="delete" class="btn btn-danger studentDelete opBtn"><span class="visible-lg visible-md visible-sm">Delete</span><i class="fa fa-trash-o visible-xs"></i></button>
+                         <button id="edit" class="btn btn-warning opBtn" data-toggle="modal" data-target="#editEntry"><span class="visible-lg visible-md visible-sm">Edit</span><i class="fa fa-edit visible-xs"></i></button></td>`);
             $('tbody > tr').eq(editEntryIndex).replaceWith(rowHTML);
         },
         error: function(){

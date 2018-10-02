@@ -10,7 +10,7 @@
     text-align: center;
     top: 50%;
     left: 50%;
-    transform: translate(-50% -50%);
+    transform: translate(-50%, -50%);
 }
 .message{
     font-size: 2rem;
@@ -52,4 +52,24 @@
 }
 .nameEditError, .courseEditError, .gradeEditError{
     color: red;
+}
+@media only screen and (max-width: 500px){
+    .opBtn{
+        position: relative;
+        width: 0;
+        height: 4vh;
+        margin: auto;
+    }
+    .opBtn i{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
+@media only screen and (max-width: 990px){
+    .student-list-container{
+        margin-top: 10px;
+        width: 100%;
+    }
 }

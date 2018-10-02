@@ -13,6 +13,7 @@
 <div class="toastMessage">
     </span><div class="message"><span class="glyphicon glyphicon-ok"></span> Delete Successful.</div>
 </div>
+
 <div class="container">
     <div class="container-fluid">
         <!-- only show this element when the isnt on mobile -->
@@ -77,9 +78,8 @@
                    placeholder="Student Grade">
         </div>
         <p class="gradeError"></p>
-        <button type="button" class="btn btn-success add" onclick="handleAddClicked()" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Adding">Add</button>
-        <button type="button" class="btn btn-default cancel" onclick="handleCancelClick()" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Cancelling">Cancel</button>
-        <button type="button" class="btn btn-warning server" id="serverData" onclick="getDataFromServer()" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Retrieving Data">Retrieve Student Information</button>
+        <button type="button" class="btn btn-success add" onclick="handleAddClicked()" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Adding"><span class="visible-lg visible-md visible-sm">Add</span><i class="fa fa-plus visible-xs"></i></button>
+        <button type="button" class="btn btn-default cancel" onclick="handleCancelClick()" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Cancelling"><span class="visible-lg visible-md visible-sm">Cancel</span><i class="fa fa-times visible-xs"></i></button>
     </div>
     <div class="student-list-container col-md-9 pull-left">
         <table class="student-list table table-responsive">
@@ -88,8 +88,7 @@
                 <th>Student Name</th>
                 <th>Student Course</th>
                 <th>Student Grade</th>
-                <th>Operations</th>
-                <th>Edit Entry</th>
+                <th class="text-center">Operations</th>
             </tr>
             </thead>
             <tbody class="studentInfo">
@@ -103,7 +102,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title text-danger" id="exampleModalLongTitle">Attempt Failed</h5>
+                    <h5 class="modal-title text-danger" id="failedToDelete">Attempt Failed</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -123,7 +122,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title text-danger" id="exampleModalLongTitle">ERROR</h5>
+                    <h5 class="modal-title text-danger" id="connectionError">ERROR</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
