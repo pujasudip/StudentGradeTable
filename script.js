@@ -7,13 +7,9 @@
  */
 $(document).ready(initializeApp);
 var student_arrayFromServer = [];
-var stagedToBeDeletedIndex = '';
+var stagedToBeDeleted = '';
 var editEntryIndex = '';
-var local_student_array = [];
 var currentPage = 1;
-if(typeof localStorage.local_student_array !== "undefined"){
-    localStorage.setItem('localArray', JSON.stringify(local_student_array));
-}
 
 /***************************************************************************************************
 * initializeApp 
@@ -99,14 +95,13 @@ function handleAddClicked(){
 
 function confirmDeleteModal(){
     var row = $(this);
+    var id =  row.parent().parent().attr('id');
     var firstTd = row.parent().parent().find('td')[0];
-    $('#nameConfirm').text($(firstTd).text());
+    stagedToBeDeleted = $(firstTd).text();
+    $('#nameConfirm').text(stagedToBeDeleted);
     $('#deleteConfirm').modal('show');
     $('#confirmDelete').click(function(){
-        debugger;
-        var index = row.parent().parent().index();
-        stagedToBeDeletedIndex = index;
-        deleteStudent(index);
+        deleteStudent(id);
     });
 }
 /***************************************************************************************************
@@ -161,9 +156,9 @@ function addStudent(){
         grade: parseInt(studentGrade.val())
     };
     if(validData){
-        pushDataToServer(studentInfo);
         clearAddStudentFormInputs();
-        updateStudentList(studentInfo);
+        pushDataToServer(studentInfo);
+        // updateStudentList(studentInfo);
         $('*').click(function(){
             $('input').removeClass('inputError');
             $('.invalidInput').css('visibility', 'hidden');
@@ -191,7 +186,7 @@ function clearAddStudentFormInputs(){
  */
 function renderStudentOnDom(studentIndividual){
     var tableBody = $('tbody');
-    var tableRow = $('<tr>');
+    var tableRow = $('<tr>').attr('id', studentIndividual.id);
     tableBody.append(tableRow);
     tableRow.append(`<td> ${studentIndividual.name}</td>`);
     tableRow.append(`<td> ${studentIndividual.course}</td>`);
@@ -233,9 +228,8 @@ function renderGradeAverage(average){
     $('.avgGrade').text(average);
 }
 
-function deleteStudent(studentIndex){
-    var studentID = student_arrayFromServer[studentIndex].id;
-    deleteDataFromServer(studentID);
+function deleteStudent(id){
+    deleteDataFromServer(id);
 }
 
 function getDataFromServer(){
@@ -248,7 +242,7 @@ function getDataFromServer(){
         method: 'GET',
         success: studentInfoFromServerSuccess,
         error: failedToRetrieve,
-    }
+    };
 
     $.ajax(lfzAPICall);
 }
@@ -259,7 +253,6 @@ function studentInfoFromServerSuccess(studentInfo){
         renderStudentOnDom(student_arrayFromServer[serverStIndex]);
     }
     renderGradeAverage(calculateGradeAverage());
-    // deleteButtonModify();
 }
 
 function failedToRetrieve(){
@@ -277,18 +270,11 @@ function pushDataToServer(studentInfo){
         },
         dataType: 'json',
         url: "dataEndpoint.php",
-        // url: "http://s-apis.learningfuze.com/sgt/adfasdfdsaf",
         method: 'POST',
         success: function(response){
             if(response.success){
-                console.log('pushing successful', response);
-                studentInfo.id = response.new_id;
-                console.log('id: ', response.new_id);
-                student_arrayFromServer.push(studentInfo);
-                my_array = JSON.parse(localStorage.getItem('localArray'));
-                my_array.push(studentInfo);
-                localStorage.setItem('localArray', JSON.stringify(my_array));
-                // deleteButtonModify();
+                $('tbody.studentInfo').empty();
+                getDataFromServer();
                 renderGradeAverage(calculateGradeAverage());
             } else {
                 $('#studentName').addClass('inputError');
@@ -303,18 +289,11 @@ function pushDataToServer(studentInfo){
     $.ajax(lfzAPICall);
 }
 
-// function pushToServerSuccess(response){
-//     console.log('pushing successful', response);
-//     my_student_array.push();
-// }
-
 function failedToPush(){
     console.log('failed to push');
 }
 
 function deleteDataFromServer(idOfStudent){
-    console.log('student length: ', student_arrayFromServer.length);
-    console.log('id to be deleted: ', idOfStudent);
     let data = {
         api_key: 'odvQ9PAoKc',
         student_id: idOfStudent
@@ -322,8 +301,6 @@ function deleteDataFromServer(idOfStudent){
     var lfzAPICall = {
         data: data,
         dataType: 'json',
-        // url: "http://s-apis.learningfuze.com/sgt/delete",
-        // url: "http://s-apis.learningfuze.com/sgt/adfasdfdsaf",
         url: "dataEndpoint.php?id=" + data['student_id'],
         method: 'DELETE',
         success: deleteFromServerSuccess,
@@ -336,25 +313,19 @@ function deleteDataFromServer(idOfStudent){
 function deleteFromServerSuccess(response){
     if(response.success){
         $('.toastMessage').fadeIn(200).delay(2000).fadeOut(200);
-        $('.studentInfo > tr').eq(stagedToBeDeletedIndex).remove();
-        student_arrayFromServer.splice(stagedToBeDeletedIndex, 1);
-        renderGradeAverage(calculateGradeAverage());
-
-    } else {
-        console.log('deletion unsuccessful');
-        var studentTried = student_arrayFromServer[stagedToBeDeletedIndex].name;
-        $('#tryDeletion').text(studentTried);
-        $('#deleteFailed').modal('show');
+        $('tbody.studentInfo').empty();
+        getDataFromServer();
     }
 }
 
 function failedDeletionProcess(){
-    console.log('deletion failed');
+    $('#tryDeletion').text(stagedToBeDeleted);
+    $('#deleteFailed').modal('show');
 }
 
 function entryToBeEdited(){
     editEntryIndex = $(this).parent().parent().index();
-    var oneStudent = student_arrayFromServer[editEntryIndex]
+    var oneStudent = student_arrayFromServer[editEntryIndex];
     $('#nameEdit').val(oneStudent.name);
     $('#courseEdit').val(oneStudent.course);
     $('#gradeEdit').val(oneStudent.grade);
@@ -403,8 +374,6 @@ function editStudentInfo(){
     }
 }
 
-// entry point is not available in the server
-// so I just did manipulation with the DOM.
 function editInfoOnServer(individualStudent, id){
     console.log(id);
     var lfzAPICall = {
@@ -421,15 +390,11 @@ function editInfoOnServer(individualStudent, id){
         // url: "http://s-apis.learningfuze.com/sgt/adfasdfdsaf",
         url: 'dataEndpoint.php',
         method: 'POST',
-        success: function(){
-            student_arrayFromServer[editEntryIndex] = individualStudent;
-            var rowHTML = $('<tr>');
-            rowHTML.append(`<td> ${individualStudent.name}</td>`);
-            rowHTML.append(`<td> ${individualStudent.course}</td>`);
-            rowHTML.append(`<td> ${individualStudent.grade}</td>`);
-            rowHTML.append(`<td class="text-center"><button id="delete" class="btn btn-danger studentDelete opBtn"><span class="visible-lg visible-md visible-sm">Delete</span><i class="fa fa-trash-o visible-xs"></i></button>
-                         <button id="edit" class="btn btn-warning opBtn" data-toggle="modal" data-target="#editEntry"><span class="visible-lg visible-md visible-sm">Edit</span><i class="fa fa-edit visible-xs"></i></button></td>`);
-            $('tbody > tr').eq(editEntryIndex).replaceWith(rowHTML);
+        success: function(response){
+            if(response.success){
+                $('tbody.studentInfo').empty();
+                getDataFromServer();
+            }
         },
         error: function(){
             console.log('Error');
@@ -438,30 +403,3 @@ function editInfoOnServer(individualStudent, id){
 
     $.ajax(lfzAPICall);
 }
-//
-// function deleteButtonModify(){
-//     var filterStudentMy = JSON.parse(localStorage.getItem('localArray'));
-//     var localKeys = [];
-//     var serverKeys = [];
-//
-//     if(filterStudentMy.length !== 0){
-//         for(var localIndex = 0; localIndex < filterStudentMy.length; localIndex++){
-//             var keyL = filterStudentMy[localIndex].id;
-//             localKeys.push(keyL);
-//         }
-//     }
-//
-//     for(var serverIndex = 0; serverIndex < student_arrayFromServer.length; serverIndex++){
-//         var keyS = student_arrayFromServer[serverIndex].id;
-//         serverKeys.push(keyS);
-//     }
-//
-//     var allTableRows = $('tbody > tr');
-//
-//     for(var rowIndex = 0; rowIndex < allTableRows.length; rowIndex++) {
-//         var id = student_arrayFromServer[rowIndex].id;
-//         if (localKeys.includes(id)) {
-//             allTableRows.eq(rowIndex).css('background-color', 'green');
-//         }
-//     }
-// }

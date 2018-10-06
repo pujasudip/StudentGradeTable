@@ -28,8 +28,18 @@ if($_SERVER['REQUEST_METHOD'] === 'GET'){
 
 if($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] === 'enter'){
     $name = $_POST['name'];
-    $course = $_POST['course'];
+    $course = ($_POST['course']);
     $grade = $_POST['grade'];
+
+    //sql sanitization
+    $name = mysqli_real_escape_string($conn, $name);
+    $course = mysqli_real_escape_string($conn, $course);
+    $grade = mysqli_real_escape_string($conn, $grade);
+
+    //html sanitization
+    $name = htmlentities($name);
+    $course = htmlentities($course);
+    $grade = htmlentities($grade);
 
     $query = "INSERT INTO `gradetable`(`name`, `course`, `grade`) VALUES('$name', '$course', $grade)";
 
@@ -53,6 +63,12 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] === 'enter'){
 if($_SERVER['REQUEST_METHOD'] === 'DELETE'){
     $queryString = $_SERVER["QUERY_STRING"];
     $id = preg_replace('/\D/', '', $queryString);
+
+    //sql sanitization
+    $id = mysqli_real_escape_string($conn, $id);
+
+    //html sanitization
+    $id = htmlentities($id);
 
     $query = "DELETE FROM `gradetable` WHERE id=$id";
 
@@ -78,6 +94,18 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] === 'update'){
     $name = $_POST['name'];
     $course = $_POST['course'];
     $grade = $_POST['grade'];
+
+    //sql sanitization
+    $id = mysqli_real_escape_string($conn, $id);
+    $name = mysqli_real_escape_string($conn, $name);
+    $course = mysqli_real_escape_string($conn, $course);
+    $grade = mysqli_real_escape_string($conn, $grade);
+
+    //html sanitization
+    $id = htmlentities($id);
+    $name = htmlentities($name);
+    $course = htmlentities($course);
+    $grade = htmlentities($grade);
 
     $query = "UPDATE `gradetable` SET `name`='$name', `course`='$course', `grade`='$grade' WHERE `id`=$id";
 
