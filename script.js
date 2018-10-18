@@ -23,6 +23,13 @@ function initializeApp() {
 
     $('.studentInfoAdd').on('input', handleStudentAddForm);
     $('.editStudentInfo').on('input', handleStudentEditForm);
+
+    var contingentInput;
+
+    $('.input-group').click(function(){
+        contingentInput = $(this).find('input');
+        contingentInput.focus();
+    });
 }
 
 function handleStudentAddForm(){
@@ -127,12 +134,12 @@ function addStudent(){
 
     if(studentName.val().length < 2) {
         validData = false;
-        $('.nameError').text('Name should be at least two character.');
+        $('.nameError').text('Name should be at least two characters.');
         $('#studentName').addClass('inputError');
     }
     if(course.val().length < 2){
         validData = false;
-        $('.courseError').text('Course should be at least two character.');
+        $('.courseError').text('Course should be at least two characters.');
         $('#course').addClass('inputError');
     }
     if(studentGrade.val() === ''){
@@ -329,6 +336,12 @@ function entryToBeEdited(){
     $('#nameEdit').val(oneStudent.name);
     $('#courseEdit').val(oneStudent.course);
     $('#gradeEdit').val(oneStudent.grade);
+    $('.nameEditError').text('');
+    $('.courseEditError').text('');
+    $('.gradeEditError').text('');
+    $('#nameEdit').removeClass('inputError');
+    $('#courseEdit').removeClass('inputError');
+    $('#gradeEdit').removeClass('inputError');
 }
 
 function editStudentInfo(){

@@ -86,3 +86,10 @@
         box-shadow: none
     }
 }
+.glyphicon{
+    background-color: rgba(255, 0, 0, 0);
+}
+.close > span{
+    color: red;
+    margin-bottom: 10px;
+}
