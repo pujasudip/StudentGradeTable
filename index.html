@@ -1,13 +1,16 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
-    <meta name="viewport" content="initial-scale=1, user-scalable=no">
+    <title>Student Grade Table</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie-edge">
 </head>
 <body>
 <div class="toastMessage">
@@ -78,8 +81,8 @@
             <span class="input-group-addon">
                 <span class="glyphicon glyphicon-education"></span>
             </span>
-            <input type="text" class="form-control studentInfoAdd" name="studentGrade" id="studentGrade"
-                   placeholder="Student Grade">
+            <input type="number" class="form-control studentInfoAdd" name="studentGrade" id="studentGrade"
+                   placeholder="Student Grade" min="0" max="100">
         </div>
         <p class="gradeError"></p>
         <button type="button" class="btn btn-success add" onclick="handleAddClicked()" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Adding"><span class="visible-lg visible-md visible-sm">Add</span><i class="fa fa-check-circle-o visible-xs fa-lg"></i></button>
@@ -165,7 +168,7 @@
                         <p class="courseEditError"></p>
                         <div class="form-group">
                             <label for="gradeEdit" class="col-form-label">Grade</label>
-                            <input type="text" class="form-control editStudentInfo" id="gradeEdit" name="studentGrade">
+                            <input type="number" class="form-control editStudentInfo" id="gradeEdit" name="studentGrade" min="0" max="100">
                         </div>
                         <p class="gradeEditError"></p>
                     </form>

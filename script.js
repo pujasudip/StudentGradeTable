@@ -132,25 +132,35 @@ function addStudent(){
     var studentGrade = $("input[name='studentGrade']");
     var validData = true;
 
-    if(studentName.val().length < 2) {
+    if(studentName.val().trim().length < 2) {
         validData = false;
         $('.nameError').text('Name should be at least two characters.');
         $('#studentName').addClass('inputError');
     }
-    if(course.val().length < 2){
+    if(studentName.val().trim().length > 30) {
+        validData = false;
+        $('.nameError').text('Name should not exceed 30 characters.');
+        $('#studentName').addClass('inputError');
+    }
+    if(course.val().trim().length < 2){
         validData = false;
         $('.courseError').text('Course should be at least two characters.');
         $('#course').addClass('inputError');
     }
-    if(studentGrade.val() === ''){
+    if(course.val().trim().length > 30){
+        validData = false;
+        $('.courseError').text('Course should should not exceed 30 characters.');
+        $('#course').addClass('inputError');
+    }
+    if(studentGrade.val().trim() === ''){
         validData = false;
         $('.gradeError').text('Invalid grade');
         $('#studentGrade').addClass('inputError');
-    } else if(studentGrade.val() > 100 || studentGrade.val() < 0){
+    } else if(studentGrade.val().trim() > 100 || studentGrade.val() < 0){
         validData = false;
-        $('.gradeError').text('Grade out of range');
+        $('.gradeError').text('Grade out of range (should be between 1 to 100)');
         $('#studentGrade').addClass('inputError');
-    } else if(isNaN(studentGrade.val())){
+    } else if(isNaN(studentGrade.val().trim())){
         validData = false;
         $('.gradeError').text('Grade should be a number');
         $('#studentGrade').addClass('inputError');
@@ -158,9 +168,9 @@ function addStudent(){
 
     var studentInfo = {
         id: '',
-        name: studentName.val(),
-        course: course.val(),
-        grade: parseInt(studentGrade.val())
+        name: studentName.val().trim(),
+        course: course.val().trim(),
+        grade: parseInt(studentGrade.val().trim())
     };
     if(validData){
         clearAddStudentFormInputs();
@@ -345,9 +355,9 @@ function entryToBeEdited(){
 }
 
 function editStudentInfo(){
-    var nameEdit = $('#nameEdit').val();
-    var courseEdit = $('#courseEdit').val();
-    var gradeEdit = parseInt($('#gradeEdit').val());
+    var nameEdit = $('#nameEdit').val().trim();
+    var courseEdit = $('#courseEdit').val().trim();
+    var gradeEdit = parseInt($('#gradeEdit').val().trim());
     var validData = true;
 
     if(nameEdit.length < 2) {
@@ -355,9 +365,19 @@ function editStudentInfo(){
         $('.nameEditError').text('Name should be at least two characters.');
         $('#nameEdit').addClass('inputError');
     }
+    if(nameEdit.length > 30) {
+        validData = false;
+        $('.nameEditError').text('Name should not exceed 30 characters.');
+        $('#nameEdit').addClass('inputError');
+    }
     if(courseEdit.length < 2){
         validData = false;
         $('.courseEditError').text('Course should be at least two characters.');
+        $('#courseEdit').addClass('inputError');
+    }
+    if(courseEdit.length > 30){
+        validData = false;
+        $('.courseEditError').text('Course should not exceed characters.');
         $('#courseEdit').addClass('inputError');
     }
     if(gradeEdit === ''){
@@ -366,7 +386,7 @@ function editStudentInfo(){
         $('#gradeEdit').addClass('inputError');
     } else if(gradeEdit > 100 || gradeEdit < 0){
         validData = false;
-        $('.gradeEditError').text('Grade out of range');
+        $('.gradeEditError').text('Grade out of range ( should be between 1 to 100)');
         $('#gradeEdit').addClass('inputError');
     } else if(isNaN(gradeEdit)){
         validData = false;
