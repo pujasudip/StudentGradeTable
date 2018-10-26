@@ -93,3 +93,6 @@
     color: red;
     margin-bottom: 10px;
 }
+.studentInfo td{
+    word-break: break-all;
+}
