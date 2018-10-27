@@ -89,10 +89,10 @@
 .glyphicon{
     background-color: rgba(255, 0, 0, 0);
 }
-.close > span{
-    color: red;
-    margin-bottom: 10px;
-}
 .studentInfo td{
     word-break: break-all;
+}
+.modal-header .close {
+    color: red;
+    margin-top: -25px;
 }
