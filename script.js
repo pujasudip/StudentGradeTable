@@ -209,7 +209,7 @@ function renderStudentOnDom(studentIndividual){
     tableRow.append(`<td> ${studentIndividual.course}</td>`);
     tableRow.append(`<td> ${studentIndividual.grade}</td>`);
     tableRow.append(`<td class="text-center"><button id="delete" class="btn btn-danger studentDelete opBtn" role="button" aria-label="Delete"><span class="visible-lg visible-md visible-sm">Delete</span><i class="fa fa-trash-o visible-xs"></i></button>
-                         <button id="edit" class="btn btn-warning opBtn" data-toggle="modal" data-target="#editEntry" role="button" aria-label="Edit" <span class="visible-lg visible-md visible-sm">Edit</span><i class="fa fa-edit visible-xs"></i></button></td>`);
+                         <button id="edit" class="btn btn-warning opBtn" data-toggle="modal" data-target="#editEntry" role="button" aria-label="Edit"><span class="visible-lg visible-md visible-sm">Edit</span><i class="fa fa-edit visible-xs"></i></button></td>`);
 }
 
 /***************************************************************************************************
